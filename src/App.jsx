@@ -1,6 +1,19 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { initializeLocalStorage } from "./utils/localStorageUtils";
+import Layout from "./components/Layout";
+import AuthRedirect from "./components/AuthRedirect";
+import AdminDashboard from "./pages/AdminDashboard";
+import Patients from "./pages/Patients";
+import EditPatient from "./pages/EditPatient";
+import Incidents from "./pages/Incidents";
+import EditIncident from "./pages/EditIncident";
+import Calendar from "./pages/Calendar";
+import PatientDashboard from "./pages/PatientDashboard";
+import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
 
 function App() {
+  initializeLocalStorage();
 
   const ProtectedRoute = (allowedRole) => {
     const user = getCurrentUser();
@@ -22,11 +35,9 @@ function App() {
           element:<Login/>
         },
         {
-          index:true,
-          element:<Authredirect/>,
+          element:<AuthRedirect/>,
           children:[
             {
-              index:true,
               element:<ProtectedRoute/>,
               children:[
                 {
