@@ -1,114 +1,170 @@
-import { useState } from 'react';
-import {
-  AppBar,
-  Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  Button,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate, Link, Outlet } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import logo from '../assets/logo.png';
+import { useState } from 'react';
 import { logout } from '../store/authSlice';
 
-const Navbar = () => {
-  const user = useSelector((state) => state.auth.user);
+
+function ResponsiveAppBar() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [anchorElNav, setAnchorElNav] = useState(null);
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const toggleDrawer = () => setDrawerOpen((prev) => !prev);
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
+  };
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
   };
 
-  const adminLinks = [
-    { text: 'Dashboard', path: '/admin/dashboard' },
-    { text: 'Patients', path: '/admin/patients' },
-    { text: 'Calendar', path: '/admin/calendar' },
-  ];
-
-  const patientLinks = [
-    { text: 'Dashboard', path: '/patient/dashboard' },
-  ];
-
-  const navLinks = user?.role === 'Admin' ? adminLinks : user?.role === 'Patient' ? patientLinks : [];
+  let pages = [];
+  let pageRoutes={};
+  if (user?.role === 'Admin') {
+    pages = ['Dashboard', 'Patients', 'Calendar'];
+    pageRoutes={
+      Dashboard: '/admin/dashboard',
+      Patients: '/admin/patients',
+      Calendar: '/admin/calendar',
+    };
+  } else if (user?.role === 'Patient') {
+    pages = ['Dashboard'];
+    pageRoutes={
+      Dashboard: '/patient/dashboard',
+    };
+  }
 
   return (
-    <>
-      <AppBar position="static" sx={{ bgcolor: 'purple' }}>
-        <Toolbar>
-          {isMobile && (
-            <IconButton edge="start" color="inherit" onClick={toggleDrawer}>
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Typography
-            variant="h6"
-            component={Link}
-            to={user ? (user.role === 'Admin' ? '/admin/dashboard' : '/patient/dashboard') : '/login'}
-            sx={{
-              flexGrow: 1,
-              textDecoration: 'none',
-              color: 'white',
-              fontWeight: 600,
-            }}
-          >
-            ENTNT Dental
-          </Typography>
+    <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 2 }}>
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
 
-          {!isMobile &&
-            navLinks.map((link) => (
-              <Button
-                key={link.text}
-                color="inherit"
-                component={Link}
-                to={link.path}
-                sx={{ ml: 2 }}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', mr: 2 }}>
+            <img src={logo} alt="Logo" style={{ height: 50, marginRight: 8 }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="#"
+              sx={{
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.2rem',
+                color: 'purple',
+                textDecoration: 'none',
+              }}
+            >
+              DENTAL CENTER
+            </Typography>
+          </Box>
+
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon sx={{ color: 'purple' }} />
+            </IconButton>
+            <Menu
+              anchorEl={anchorElNav}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{ display: { xs: 'block', md: 'none' } }}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <NavLink
+                    to={pageRoutes[page]}
+                    style={({ isActive }) => ({
+                      color: 'purple',
+                      fontWeight: isActive ? 'bold' : 'normal',
+                      textDecoration: 'none',
+                    })}
+                  >
+                    {page}
+                  </NavLink>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', flexGrow: 1, mr: 1 }}>
+            <img src={logo} alt="Logo" style={{ height: 40, marginRight: 8 }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="#"
+              sx={{
+                fontFamily: 'monospace',
+                fontWeight: 600,
+                letterSpacing: '.1rem',
+                color: 'purple',
+                textDecoration: 'none',
+              }}
+            >
+              DENTAL CENTER
+            </Typography>
+          </Box>
+
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <NavLink
+                key={page}
+                to={pageRoutes[page]}
+                style={({ isActive }) => ({
+                  textDecoration: 'none',
+                  color: 'purple',
+                  padding: '22px',
+                  borderBottom: isActive ? '3px solid purple' : '3px solid transparent',
+                  fontWeight: isActive ? 600 : 400,
+                })}
               >
-                {link.text}
-              </Button>
+                {page}
+              </NavLink>
             ))}
+          </Box>
 
           {user && (
-            <Button color="inherit" onClick={handleLogout} sx={{ ml: 2 }}>
-              Logout
-            </Button>
+            <Box sx={{ flexShrink: 0, display: 'flex', justifyContent: 'flex-end' }}>
+              <Button
+                onClick={handleLogout}
+                sx={{
+                  backgroundColor: '#9c27b0',
+                  color: 'white',
+                  px: 2,
+                  py: 1,
+                  fontSize: '0.8rem',
+                  minWidth: 'auto',
+                  '&:hover': { backgroundColor: '#7b1fa2' },
+                }}
+              >
+                Logout
+              </Button>
+            </Box>
           )}
         </Toolbar>
-      </AppBar>
-
-      <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer}>
-        <Box sx={{ width: 250 }} onClick={toggleDrawer}>
-          <List>
-            {navLinks.map((link) => (
-              <ListItem button key={link.text} component={Link} to={link.path}>
-                <ListItemText primary={link.text} />
-              </ListItem>
-            ))}
-            {user && (
-              <ListItem button onClick={handleLogout}>
-                <ListItemText primary="Logout" />
-              </ListItem>
-            )}
-          </List>
-        </Box>
-      </Drawer>
-      <Outlet/>
-    </>
+      </Container>
+    </AppBar>
   );
-};
+}
 
-export default Navbar;
+export default ResponsiveAppBar;

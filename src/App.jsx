@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from "react-router-dom"
 import { initializeLocalStorage } from "./utils/localStorageUtils";
 import Layout from "./components/Layout";
 import AuthRedirect from "./components/AuthRedirect";
@@ -11,16 +11,21 @@ import Calendar from "./pages/Calendar";
 import PatientDashboard from "./pages/PatientDashboard";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import { useSelector } from "react-redux";
 
 function App() {
   initializeLocalStorage();
 
-  const ProtectedRoute = (allowedRole) => {
-    const user = getCurrentUser();
+  const isLoading=false;
+  const user = useSelector((state) => state.auth.user);
 
-    if (!user || !isLoading || !allowedRole.includes(user.role) ) {
+  const ProtectedRoute = (allowedRole) => {
+
+    if (!user && !isLoading) {
       return <Navigate to="/login" />;
     }
+
+    console.log('pro');
 
     return isLoading?<Loader/>:<Outlet />;
   };
@@ -35,6 +40,7 @@ function App() {
           element:<Login/>
         },
         {
+          path:'',
           element:<AuthRedirect/>,
           children:[
             {
