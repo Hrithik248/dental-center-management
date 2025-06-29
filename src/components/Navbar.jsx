@@ -103,6 +103,16 @@ function ResponsiveAppBar() {
                   </NavLink>
                 </MenuItem>
               ))}
+              {user && (
+                <MenuItem onClick={() => {
+                  handleCloseNavMenu();
+                  handleLogout();
+                }}>
+                  <Typography sx={{ color: 'purple', fontWeight: 600 }}>
+                    Logout
+                  </Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
 
@@ -144,7 +154,7 @@ function ResponsiveAppBar() {
           </Box>
 
           {user && (
-            <Box sx={{ flexShrink: 0, display: 'flex', justifyContent: 'flex-end' }}>
+            <Box sx={{ flexShrink: 0, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
               <Button
                 onClick={handleLogout}
                 sx={{
