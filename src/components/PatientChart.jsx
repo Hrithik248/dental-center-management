@@ -2,7 +2,7 @@ import { AreaChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Typography, Card, CardContent } from '@mui/material';
 
 const PatientChart = ({ data }) => (
-  <Card sx={{ flex: 1, mb: 2, width:'30vw', minWidth:'300px' }}>
+  <Card sx={{ flex: 1, mb: 2, width:'30vw', minWidth:'325px' }}>
     <CardContent>
       <Typography variant="h6" gutterBottom>
         Monthly Patient Count

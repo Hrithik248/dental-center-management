@@ -19,12 +19,22 @@ const AdminDashboard = () => {
         setStats(getMonthlyStats(i, p));
     }, []);
 
+    const topPatients = [...patients].map((p) => {
+        const totalSpent = incidents
+            .filter((i) => i.patientId === p.id && i.status === 'Completed')
+            .reduce((sum, i) => sum + (i.cost || 0), 0);
+        return { ...p, totalSpent };
+    })
+    .sort((a, b) => b.totalSpent - a.totalSpent)
+    .slice(0, 3);
+
+
     const totalRevenue = incidents.reduce((sum, i) => sum + (i.cost || 0), 0);
     const completed = incidents.filter(i => i.status === 'Completed').length;
     const pending = incidents.filter(i => i.status !== 'Completed').length;
 
     return (
-        <Box p={4}>
+        <Box p={2}>
         <Typography variant="h4" mb={3} color="purple" fontWeight={600}>
             Admin Dashboard
         </Typography>
@@ -42,6 +52,23 @@ const AdminDashboard = () => {
             </Grid>
             <Grid item xs={12} md={6}>
                 <RevenueChart data={stats} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+                <Box px={2} py={4.9} boxShadow={2} borderRadius={2} height={300} minWidth={295} width='29vw' bgcolor="#fff">
+                    <Typography variant="h6" mb={3} gutterBottom color="primary">
+                        Top 3 Patients
+                    </Typography>
+                    {topPatients.map((p, idx) => (
+                        <Box key={p.id} mb={1.5} p={1.5} border="1px solid #6a1b9a" borderRadius={1}>
+                            <Typography fontWeight="bold" color="#6a1b9a" >
+                                {idx + 1}. {p.name}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                                Total Spent: ${p.totalSpent}
+                            </Typography>
+                        </Box>
+                    ))}
+                </Box>
             </Grid>
         </Grid>
 

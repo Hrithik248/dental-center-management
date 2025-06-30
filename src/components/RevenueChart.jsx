@@ -2,8 +2,7 @@ import { AreaChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Typography, Card, CardContent } from '@mui/material';
 
 const RevenueChart = ({ data }) => (
-  <Card sx={{ flex: 1, width:'30vw', minWidth:'300px' }}>
-    {console.log(data)}
+  <Card sx={{ flex: 1, width:'30vw', minWidth:'325px' }}>
     <CardContent>
       <Typography variant="h6" gutterBottom>
         Monthly Revenue

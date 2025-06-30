@@ -50,7 +50,7 @@ function ResponsiveAppBar() {
   }
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 2 }}>
+    <AppBar position="sticky" sx={{ backgroundColor: 'white', boxShadow: 2 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
 
@@ -73,7 +73,7 @@ function ResponsiveAppBar() {
             </Typography>
           </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          {user && <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               onClick={handleOpenNavMenu}
@@ -114,7 +114,7 @@ function ResponsiveAppBar() {
                 </MenuItem>
               )}
             </Menu>
-          </Box>
+          </Box>}
 
           <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', flexGrow: 1, mr: 1 }}>
             <img src={logo} alt="Logo" style={{ height: 40, marginRight: 8 }} />

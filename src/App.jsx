@@ -25,8 +25,6 @@ function App() {
       return <Navigate to="/login" />;
     }
 
-    console.log('pro');
-
     return isLoading?<Loader/>:<Outlet />;
   };
 
@@ -44,6 +42,7 @@ function App() {
           element:<AuthRedirect/>,
           children:[
             {
+              path:'',
               element:<ProtectedRoute/>,
               children:[
                 {

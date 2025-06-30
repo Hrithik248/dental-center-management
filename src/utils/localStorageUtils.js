@@ -191,7 +191,7 @@ const seedData = {
       title: 'Cavity Filling',
       description: 'Lower molar cavity',
       comments: 'Mild decay',
-      appointmentDate: '2025-06-10T09:00:00',
+      appointmentDate: '2025-01-01T09:00:00',
       cost: 90,
       treatment: '',
       status: 'Completed',
